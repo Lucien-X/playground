@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>canvas</title>
+  <link href="https://cdn.bootcss.com/normalize/7.0.0/normalize.min.css" rel="stylesheet">
+  <style>
+  #file_input,
+  #file_cover {
+    width: 100%;
+    height: 100px;
+  }
+  
+  #file_input {
+    outline: none;
+    opacity: 0;
+  }
+  
+  #file_cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    line-height: 100px;
+    text-align: center;
+    font-size: 40px;
+    box-sizing: border-box;
+    border: 1px dashed transparent;
+    background-repeat: no-repeat;
+    background-size: contain;
+    /*下面这句定义鼠标穿透，可以透过#file_cover点击到#file_input*/
+    pointer-events: none;
+  }
+  /* 加号表示元素的下一个元素，IE6不支持*/
+  #file_input:hover + #file_cover {
+    color: #07a9fa;
+    border-color: #999;
+    background-color: #efefef;
+  }
+
+  #canvas_wrapper{
+    width: 100%;
+    overflow-x: scroll;
+  }
+  </style>
+</head>
+
+<body>
+  <input id="file_input" type="file" />
+  <div id="file_cover">点击上传或拖拽图片到此</div>
+  <button id="invert">反色</button>
+  <button id="decolourize">去色</button>
+  <button id="save">下载</button>
+  <br>
+  <div id="canvas_wrapper">
+    <canvas id="canvas">您的浏览器不支持HTML5 canvas 标签</canvas>
+  </div>
+  <script>
+  // 首先进行兼容性判断
+  if (window.File && window.FileReader && window.FileList && window.Blob) {
+
+    // 声明变量
+    var fileInput = document.querySelector('#file_input')
+    var fileCover = document.querySelector('#file_cover')
+    var canvas = document.querySelector('#canvas')
+    var ctx = canvas.getContext('2d')
+    var save = document.querySelector('#save')
+    var invert = document.querySelector('#invert')
+    var decolourize = document.querySelector('#decolourize')
+    var portraitFile = null //HTML5 文件对象
+    var portrait = null //图像, new Image()
+
+    // 阻止浏览器默认行为，定义拖拽操作
+    function dragenter(e) {
+      e.stopPropagation()
+      e.preventDefault()
+    }
+
+    function dragover(e) {
+      e.stopPropagation()
+      e.preventDefault()
+    }
+
+    function drop(e) {
+      e.stopPropagation()
+      e.preventDefault()
+      handleFiles(e.dataTransfer.files)
+    }
+
+    // 绘制canvas
+    function drawCanvas() {
+      // 清空画布
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+        // 如果图像存在
+      if (portrait) {
+        var x = 0
+        var y = 0
+        var width = portrait.width
+        var height = portrait.height
+          // 调整canvas宽高
+        canvas.width = width
+        canvas.height = height
+          // 绘制图像
+        ctx.drawImage(portrait, x, y, width, height)
+      }
+    }
+
+    // 处理上传图片
+    function handleFiles(files) {
+      // 如果选择了文件
+      if (files.length == 1) {
+        // 赋值到HTML5 文件对象
+        portraitFile = files[0]
+
+        // 限制文件类型为图片
+        var imageType = /^image\//
+        if (!imageType.test(portraitFile.type)) {
+          alert('请选择图片类型文件 (X_X)');
+          return;
+        }
+
+        // 限制文件大小3M以内
+        var size = portraitFile.size / 1000;
+        if (size > 3000) {
+          alert('图片大小：' + size + 'K \n\n ，一张图片而已，大小请控制在3M内 (OwO)');
+          return;
+        }
+
+        // 将文件作为DataURL读入图像对象，并触发canvas绘制
+        var reader = new FileReader()
+        reader.onload = function(e) {
+          portrait = new Image()
+          portrait.onload = drawCanvas
+          portrait.src = e.target.result
+        }
+        reader.readAsDataURL(portraitFile)
+      }
+    }
+
+    // 图片反相
+    function invertImg() {
+      // 如果图像存在
+      if(portrait){
+        var imgData = ctx.getImageData(0, 0, portrait.width, portrait.height),
+            tmpData = ctx.createImageData(portrait.width, portrait.height);
+
+        var origin = imgData.data,
+            result = tmpData.data;
+
+        // 将每个像素的RGB用255减去
+        for (var i = 0;i < origin.length; i += 4) {
+          var R = origin[i],
+              G = origin[i + 1],
+              B = origin[i + 2],
+              A = origin[i + 3];
+
+              result[i]     = 255 - R;
+              result[i + 1] = 255 - G;
+              result[i + 2] = 255 - B;
+              result[i + 3] = A;
+        }
+
+        ctx.putImageData(tmpData,0,0,0,0,portrait.width,portrait.height);
+      }
+    }
+
+    // 图片去色
+    function decolourizeImg(){
+      // 如果图像存在
+      if(portrait){
+        var imgData = ctx.getImageData(0, 0, portrait.width, portrait.height);
+        var tmpData = ctx.createImageData(portrait.width, portrait.height);
+
+        var origin = imgData.data;
+        var result = tmpData.data;
+
+        // 将每个像素的RGB设为γ值，γ=0.299*R + 0.587*G + 0.114*B
+        for (var i = 0;i < origin.length; i += 4) {
+          var R = origin[i],
+              G = origin[i + 1],
+              B = origin[i + 2],
+              A = origin[i + 3];
+         
+              result[i]     = 0.299*R + 0.587*G + 0.114*B;
+              result[i + 1] = 0.299*R + 0.587*G + 0.114*B;
+              result[i + 2] = 0.299*R + 0.587*G + 0.114*B;
+              result[i + 3] = A;
+        }
+
+        ctx.putImageData(tmpData,0,0,0,0,portrait.width,portrait.height);
+      }
+    }
+
+    // 图片保存
+    function saveImg() {
+      // 如果文件存在
+      if (portraitFile) {
+        var filename = portraitFile.name.slice(0, portraitFile.name.lastIndexOf('.'))
+        var a = document.createElement('a')
+        a.download = filename + '_processed.png'
+        a.href = canvas.toDataURL('image/png')
+        a.click()
+      }
+    }
+
+    //初始化
+    function init() {
+      fileInput.addEventListener("dragenter", dragenter)
+      fileInput.addEventListener("dragover", dragover)
+      fileInput.addEventListener("drop", drop)
+      fileInput.addEventListener("change", function(e) {
+        handleFiles(e.target.files)
+      })
+      save.addEventListener("click", saveImg)
+      invert.addEventListener("click", invertImg)
+      decolourize.addEventListener("click", decolourizeImg)
+    }
+
+    init()
+
+  } else {
+    alert('请使用Chrome浏览器访问 (^_^)')
+  }
+  </script>
+</body>
+
+</html>

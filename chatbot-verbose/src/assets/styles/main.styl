@@ -1,0 +1,80 @@
+* 
+    margin 0
+    padding 0
+    box-sizing border-box
+    outline none
+    // transition all .3s
+
+    before 
+        box-sizing border-box
+    
+    after 
+        box-sizing border-box
+html
+    perspective 1000px
+
+body
+    background url("../images/icon.svg")
+    background-color gold
+    background-size 200px 200px
+    background-attachment fixed
+    color #fff
+    font-size 20px
+    #mask
+        position fixed
+        z-index -1
+        background-color #000
+        opacity 0.5
+        width 100vw
+        height 100vh
+    #header
+        width 100vw
+        height 20vh
+        text-align center
+      
+    terminalBox()
+        padding .5em
+        border 1px solid
+        margin .5em
+        overflow auto
+        height 80vh
+        position fixed 
+        transition none
+        background-color #000
+        opacity 0.8
+        top 20vh
+    textarea()
+        width 100%
+        height 90%
+        resize none
+        background-color #000
+        color #fff
+        font-size 20px
+        padding .5em
+        outline none
+        border 1px solid #fff
+        overflow-y scroll
+        
+    #client
+        width 30vw 
+        left 1vw 
+        transform rotateY(20deg) translateZ(-100px)
+        terminalBox()
+        #client-screen
+            textarea()
+            height 80%
+        .buttons
+            float right
+            button
+                padding 10px
+                font-size 18px
+                border-radius 5px
+    #server
+        width 70vw 
+        right 1vw
+        transform rotateY(-10deg) translateZ(-100px)
+        terminalBox()
+        #server-screen
+            textarea()
+    
+

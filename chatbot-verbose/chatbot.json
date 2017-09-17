@@ -1,0 +1,6 @@
+{
+   "你是谁":"我是一个由Node实现的简单聊天机器人，我叫 Verbose",
+   "你的作者是谁":"Lucien-X，一只有意思的前端 🐶",
+   "你用到了哪些技术栈":"Webpack,Lodash,Node,socket.io,以及一点点小灵感...",
+   "前端跨域统计代码":"<pre><code class='javascript'>var sendStatistic = function(url) {\n/* 先new一个Image对象，并且生成一个随机KEY，\n用于存储该对象到全局变量，防止JS垃圾回收机制，在进行较重的DOM操作时，\n将这个没有被二次引用的对象销毁，从而导致统计量丢失*/\nvar img = new Image(),\n/* 这里是生成了一个36位(0~9,A~Z,10+26=36)随机数，\n 32bit最大正整数为214783647，这里的取值范围是0到该最大值\n 目的是尽量减少KEY的重复*/\nkey = 'Baizhu_FED_log_' + Math.floor(Math.random() * 2147483648).toString(36);\nwindow[key] = img;\n// 显式指定img加载相关的事件\nimg.onload = img.onerror = img.onabort = function() {\n// img标签加载完成、错误或终止时，解除事件绑定，销毁相关对象\nimg.onload = img.onerror = img.onabort = null;\nwindow[key] = null;\nimg = null;\n};\n// 指定img的src属性，触发加载\nimg.src = url;\n};</code></pre>"
+}
