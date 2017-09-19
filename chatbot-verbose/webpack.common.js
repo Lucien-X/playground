@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const poststylus = require('poststylus');
 
 module.exports = {
     entry: {
@@ -38,7 +39,7 @@ module.exports = {
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'runtime'
-        }),
+        })
     ],
     output: {
         filename: '[name].[chunkhash:8].js',
@@ -48,48 +49,49 @@ module.exports = {
         rules: [{
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
-                use: {
+                loader: {
                     loader: 'babel-loader',
                     options: {
                         presets: ['env']
                     }
                 }
-            }, {
+            },
+            {
                 test: /\.styl$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
+                loader: ExtractTextPlugin.extract({
+                    fallback: { loader: 'style-loader' },
                     use: [
                         'css-loader',
-                        'stylus-loader'
+                        {
+                            loader: 'stylus-loader',
+                            options: {
+                                use: poststylus(['autoprefixer'])
+                            }
+                        }
                     ]
                 })
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader"
-                })
+                loader: ExtractTextPlugin.extract({
+                    fallback: { loader: 'style-loader' },
+                    use: [{
+                        loader: 'css-loader',
+                        options: {
+                            context: '/',
+                            name: '[name].[hash:8].[ext]'
+                        }
+                    }]
+                }),
             },
             {
-                test: /\.(png|svg|jpg|gif)$/,
-                use: [{
-                    loader: 'file-loader',
-                    options: {
-                        context: '/',
-                        name: '[name].[hash:8].[ext]'
-                    }
-                }],
-            },
-            {
-                test: /\.(woff|woff2|eot|ttf|otf)$/,
-                use: [{
-                    loader: 'file-loader',
-                    options: {
-                        context: '/',
-                        name: '[name].[hash:8].[ext]'
-                    }
-                }]
+                test: /\.(png|jpg|gif|woff(2)?|eot|ttf|otf|svg)$/,
+                loader: 'url-loader',
+                options: {
+                    context: '/',
+                    limit: 100000,
+                    name: '[name].[hash:8].[ext]'
+                }
             },
             {
                 test: /\.(csv|tsv)$/,
