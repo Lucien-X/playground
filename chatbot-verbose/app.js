@@ -35,7 +35,7 @@ socket.listen(server).on('connection', function(client) {
                 var randomIndex = Math.floor(Math.random()*keys.length);
                 var randomEleInObj = keys[randomIndex];
 
-                client.send('听不懂你在说什么诶，你可以试试问我：<br/>'+ randomEleInObj+'?');
+                client.send('听不懂你在说什么诶，你可以试试问我：<br/><br/>'+ randomEleInObj+'?');
             }
         });
     });

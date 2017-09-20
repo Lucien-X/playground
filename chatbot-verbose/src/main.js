@@ -6,6 +6,9 @@ if (process.env.NODE_ENV !== 'production') {
 import '../node_modules/font-awesome/css/font-awesome.min.css'
 // 自定义样式
 import './assets/styles/main.styl';
+// favicons
+import './assets/favicons/favicons.js';
+
 // 基础工具库
 import $ from 'jquery';
 import _ from 'lodash';
@@ -25,28 +28,52 @@ const $SERVER_SCREEN = $('#server-screen');
 /**
  * 代码高亮
  */
-const highlight = function() {
-    $('pre code').each(function(i, block) {
+const highlight = () => {
+    $('pre code').each((i, block) => {
         hljs.highlightBlock(block);
     });
 };
-$(document).ready(function() {
-    highlight();
-});
+$(document).ready(highlight);
 
 /**
  * UI逻辑
  */
 
+
 // 定义服务器回传输出方法
-const printLogToScreen = function(msg) {
-    $SERVER_SCREEN.html(msg + '<br/>');
-    highlight();
-}
+const printLogToScreen = (() => {
+    //闭包保存定时器状态，防止上次递归未结束就触发下一次递归
+    var logFlag = null;
+    return (msg) => {
+        // 如果定时器存在，清除定时器
+        if (!!logFlag) {
+            clearTimeout(logFlag);
+        }
+
+        // 输入队列
+        var inputQueue = msg.split('');
+        // 输出队列
+        var outputQueue = [];
+
+        const typeAhead = () => {
+            outputQueue.push(inputQueue.shift());
+            $SERVER_SCREEN.html(outputQueue.join(''));
+            highlight();
+            // 当数组还未空时，递归调用，进入下一次循环
+            if (inputQueue.length !== 0) {
+                logFlag = setTimeout(typeAhead, 20);
+            } else {
+                return;
+            }
+        }
+        // 触发第一次调用
+        typeAhead();
+    }
+})();
 
 // 为按键添加事件委托
 $CLIENT.find('.js_send').on('click', _.debounce(
-    function(event) {
+    (event) => {
         event.preventDefault();
         socket.send($CLIENT_SCREEN.val());
     },
@@ -55,28 +82,28 @@ $CLIENT.find('.js_send').on('click', _.debounce(
         'trailing': false
     }
 ));
-$CLIENT.find('.js_reset').on('click',
-    function(event) {
-        event.preventDefault();
-        $CLIENT_SCREEN.val('').focus();
-    }
-);
+$CLIENT.find('.js_reset').on('click', (event) => {
+    event.preventDefault();
+    $CLIENT_SCREEN.val('').focus();
+});
+
+
 /**
  * WebSocket 处理逻辑
  */
 
 const socket = io.connect('http://localhost:9000');
 // 连接成功处理
-socket.on('connect', function() {
+socket.on('connect', () => {
     printLogToScreen('Server connected.');
 
     // 监听服务端消息
-    socket.on('message', function(msg) {
+    socket.on('message', (msg) => {
         printLogToScreen(msg);
     });
 
     // 监听服务端关闭
-    socket.on('disconnect', function() {
+    socket.on('disconnect', () => {
         printLogToScreen('Server disconnected.');
     });
 });
