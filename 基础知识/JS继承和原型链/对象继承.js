@@ -56,7 +56,7 @@ alert(Chinese.birthPlaces); //北京, 上海, 香港, 厦门
 function deepCopy(p, c) {
 	var c = c || {};
 	for (var i in p) {
-		if (typeof p[i] === 'object') {
+		if (typeof p[i] === 'object' && !!p[i]) {
 			c[i] = (p[i].constructor === Array) ? [] : {};
 			deepCopy(p[i], c[i]);
 		} else {

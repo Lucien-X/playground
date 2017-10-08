@@ -12,7 +12,7 @@
 // 2.中序遍历：
 // 	模式：先输出左子树，再输出根节点，最后输出右子树。
 // 	特点：对于二叉搜索树，中序遍历的操作顺序（或输出结果顺序）是符合从小到大（或从大到小）顺序的。
-// 	用途：配合栈结构，可实现排序功能。
+// 	用途：配合栈结构，可实现排序功能。反转二叉树后，可以倒序。
 // 3.后序遍历：
 // 	模式：先输出左子树，再输出右子树，最后输出根节点。
 // 	特点：后序遍历的特点是执行操作时，肯定已经遍历过该节点的左右子节点。
@@ -138,6 +138,17 @@ BST.prototype={
 			}
 		}
 		return null;
+	},
+	// 反转二叉树
+	revert:function(Node){
+		if(Node){
+			var tmp = Node.right;
+			Node.right = Node.left;
+			Node.left = tmp;
+
+			this.revert(Node.left);
+			this.revert(Node.right);
+		}
 	}
 }
 
@@ -152,15 +163,33 @@ tree.insert(99);
 tree.insert(22);
 
 
-console.log('=====先序=====');
+console.log('=====先序遍历=====');
 tree.preOrder(tree.root);
-console.log('=====中序=====');
+console.log('=====中序遍历=====');
 tree.inOrder(tree.root);
-console.log('=====后序=====');
+console.log('=====后序遍历=====');
 tree.postOrder(tree.root);
 console.log('=====查找最小值=====');
 tree.getMin();
 console.log('=====查找最大值=====');
 tree.getMax();
 console.log('=====查找指定值=====');
-tree.find(22);
+console.dir(tree.find(22));
+console.dir(tree);
+console.log('=====先拷贝树，再反转二叉树后，再次中序遍历，应得到倒序=====');
+function deepCopy(p, c) {
+	var c = c || {};
+	for (var i in p) {
+		if (typeof p[i] === 'object' && !!p[i]) {
+				c[i] = (p[i].constructor === Array) ? [] : {};
+				deepCopy(p[i], c[i]);
+		} else {
+			c[i] = p[i];
+		}
+	}
+	return c;
+}
+var mirrorTree = deepCopy(tree);
+mirrorTree.revert(mirrorTree.root);
+mirrorTree.inOrder(mirrorTree.root);
+
