@@ -1,6 +1,6 @@
 评测题目:
 
-1. 实现一个jQuery插件， 生成一组字母数字组合的随机串（ 像车牌） `$.generateId(6)`；
+    1. 实现一个jQuery插件， 生成一组字母数字组合的随机串（ 像车牌） `$.generateId(6)`；
 2. 原生代码实现jsonp函数， 带超时、 兼容性好： `jsonp(url,params,{timeout,success,error,prefix})`
 3. 一个验证IPv4地址合法性的正则表达式
 
@@ -26,7 +26,7 @@ $.extend({
 // 2、jsonp函数
 function jsonp(url, params, options) {
 
-    // 递归合并对象方法，将p合并到c中
+    // 该方法递归地将p拷贝进c中
     var extend = function(p, c) {
         var c = c || {};
         for (var i in p) {
@@ -40,7 +40,7 @@ function jsonp(url, params, options) {
         return c;
     };
 
-    // 将对象转化为URL
+    // 该方法将对象转换成URL查询参数
     var encodeObjectToQueryString = function(param, key) {
         var paramStr = '';
         var separator = '&';
@@ -64,36 +64,41 @@ function jsonp(url, params, options) {
         error: function() {},
         prefix: 'callback'
     };
-    // 将入参的options合并到参数默认值中
+    // 调用方法拷贝默认值
     options = extend(options, defaultOptions);
-    
-    // 声明定时器flag
+
+    // 定义定时器timer
     var timer = null;
-    // 生成随机数作为callback函数名
-    var randomStamp = 'jsonp_' + Math.floor(Math.random() * 2147483648).toString(36);
+    // 定义callback函数名，这里加了随机数后缀防止重复
+    var callbackName = 'jsonpCallback_' + Math.floor(Math.random() * 2147483648).toString(36);
 
     // 实例化 script DOM对象
     var cdjs = document.createElement('script');
     cdjs.type = 'text/javascript';
-    cdjs.src = url + '?' + encodeObjectToQueryString(params) + '&' + options.prefix + '=' + randomStamp;
-
-    // 创建jsonp成功回调
-    window[randomStamp] = function(resp) {
-        // 停止定时器
-        clearTimeout(timer);
-        // 将参数传入回调
-        options.success && options.success(resp);
-        // 一些清理工作
-        document.getElementsByTagName('head')[0].removeChild(cdjs);
-        window[randomStamp] = null;
-    };
+    cdjs.src = url + '?' + encodeObjectToQueryString(params) + '&' + options.prefix + '=' + callbackName;
 
     // 创建jsonp失败回调
     if (options.timeout !== 0) {
+        // 设置定时器
         timer = setTimeout(function() {
-            options.error && options.error();
+            // 调用失败回调
+            options.error && options.error(url,params,options);
+            // 一些清理工作
+            document.getElementsByTagName('head')[0].removeChild(cdjs);
+            window[callbackName] = null;
         }, options.timeout);
     }
+
+    // 创建jsonp成功回调
+    window[callbackName] = function(resp) {
+        // 停止定时器
+        clearTimeout(timer);
+        // 调用成功回调
+        options.success && options.success(resp);
+        // 一些清理工作
+        document.getElementsByTagName('head')[0].removeChild(cdjs);
+        window[callbackName] = null;
+    };
 
     // 追加元素，触发请求
     document.getElementsByTagName('head')[0].appendChild(cdjs);
@@ -101,16 +106,23 @@ function jsonp(url, params, options) {
 }
 
 // 测试用Demo，用了百度的搜索接口
-(function(){
-    var word = 'Alibaba';
-    jsonp('http://suggestion.baidu.com/su',{wd:word,json:1,p:3},
-        {
-            success:function(resp){console.log(resp);},
-            error:function(){console.log('error')},
-            timeout:4000,
-            prefix:'cb'
-        });
-})();
+jsonp('http://suggestion.baidu.com/su', {
+    wd: 'Alibaba',
+    someObject: { key: 'value', subObject: { arrayInObj: [1, 2] } },
+    someBoolean: true,
+    someArray: [1, 2, 3]
+}, {
+    prefix: 'cb',
+    timeout: 2000,
+    success: function(resp) {
+        console.log(resp);
+    },
+    error: function() {
+        console.log('JSONP timeout.');
+        console.log(arguments);
+    }
+});
+
 
 
 // 3.验证IPV4合法性的正则
