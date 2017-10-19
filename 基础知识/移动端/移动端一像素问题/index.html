@@ -1,0 +1,56 @@
+<html>  
+  
+    <head>  
+        <title>1px question</title>  
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">  
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">       
+        <style>  
+            html {  
+                font-size: 1px;
+                background-color: #fff;
+            }
+            body{
+                width:16rem;
+                margin:0 auto;
+                background-color: #e2e2e2;
+            }             
+            * {
+                padding: 0;  
+                margin: 0;  
+                box-sizing: border-box;
+            }
+              
+            .bds_b {  
+                border-bottom: 1px solid #ccc;  
+            }  
+              
+            .a,  
+            .b {  
+                margin-top: 1rem;
+                padding: 1rem;                
+                font-size: 1.4rem;  
+            }  
+              
+            .a {  
+                width: 16rem;  
+            }  
+            
+            .b {  
+                background: #f5f5f5;  
+                width: 16rem;  
+            }
+        </style>
+        <script charset="UTF-8" src="./hotcss.js"></script>
+        <script>
+            hotcss.designWidth = 750;
+            console.log(hotcss.px2rem(750));
+        </script>
+    </head>  
+  
+    <body>  
+        <div class="bds_b a">下面的底边宽度是虚拟1像素的</div>  
+        <div class="b">上面的边框宽度是虚拟1像素的</div>  
+        <a href="http://www.html-js.com/article/Mobile-terminal-H5-mobile-terminal-HD-multi-screen-adaptation-scheme%203041" target="_blank">Demo解释</a>
+    </body>  
+  
+</html>
