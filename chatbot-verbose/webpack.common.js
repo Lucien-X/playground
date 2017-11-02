@@ -11,7 +11,8 @@ module.exports = {
             'jquery',
             'lodash',
             'highlight.js',
-            'socket.io-client'
+            'socket.io-client',
+            'hotcss'
         ]
     },
     plugins: [

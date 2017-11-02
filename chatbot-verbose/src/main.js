@@ -8,6 +8,8 @@ import '../node_modules/font-awesome/css/font-awesome.min.css'
 import './assets/styles/main.styl';
 // favicons
 import './assets/favicons/favicons.js';
+// hotcss,移动端rem布局基础库
+import hotcss from 'hotcss'
 
 // 基础工具库
 import $ from 'jquery';
@@ -24,6 +26,11 @@ const $CLIENT = $('#client');
 const $CLIENT_SCREEN = $('#client-screen');
 const $SERVER = $('#server');
 const $SERVER_SCREEN = $('#server-screen');
+
+/**
+ * hotcss配置,以防JS中用到hotcss的px2rem和rem2px方法
+ */
+hotcss.designWidth = 750;
 
 /**
  * 代码高亮
