@@ -1,11 +1,11 @@
 # 数据库基础的CURD操作备忘
 
 CREATE TABLE `Persons` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `LastName` text,
-  `FirstName` text,
-  `Address` text,
-  `City` text,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `LastName` varchar(255),
+  `FirstName` varchar(255),
+  `Address` varchar(255),
+  `City` varchar(255),
   `Age` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
