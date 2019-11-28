@@ -1,0 +1,16 @@
+{
+  "name": "hitokoto-qotd",
+  "version": "0.0.1",
+  "bin": {
+    "hitokoto-qotd": "index.js"
+  },
+  "scripts": {
+    "build": "rm -rf ./dist && pkg . --out-path ./dist/"
+  },
+  "dependencies": {
+    "boxen": "^4.1.0"
+  },
+  "devDependencies": {
+    "pkg": "^4.4.0"
+  }
+}
