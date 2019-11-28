@@ -1,0 +1,29 @@
+{
+  "name": "json2png",
+  "version": "1.0.1",
+  "description": "Convert Lottie JSON into png frames",
+  "main": "src/index.js",
+  "bin": "src/index.js",
+  "scripts": {
+    "dev": "npm run clean && node src/index.js test.json",
+    "build": "pkg . --out-path ./dist",
+    "test": "npm run clean && dist/json2png-macos test.json",
+    "clean": "rm -rf test_*"
+  },
+  "author": "lucien-x",
+  "license": "MIT",
+  "dependencies": {
+    "chrome-location": "^1.2.1",
+    "css-in-js-utils": "^3.0.2",
+    "execa": "^1.0.0",
+    "fs-extra": "^7.0.1",
+    "open": "^7.0.0",
+    "ora": "^3.4.0",
+    "ow": "^0.12.0",
+    "pluralize": "^7.0.0",
+    "puppeteer-core": "^2.0.0",
+    "readline-sync": "^1.4.10",
+    "sprintf-js": "^1.1.2",
+    "tempy": "^0.3.0"
+  }
+}
