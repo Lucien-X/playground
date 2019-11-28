@@ -1,6 +1,8 @@
 {
   "name": "hitokoto-qotd",
   "version": "0.0.1",
+  "author": "lucien-x",
+  "registry": "https://registry.npmjs.org",
   "bin": {
     "hitokoto-qotd": "index.js"
   },
