@@ -34,5 +34,5 @@ You can just download it, "chmod +x" it,
 and add its binary call into your .bashrc .zshrc etc.
 
 ## Screenshot
-![Win10 CMD PowerShell WSL.PNG](https://raw.githubusercontent.com/Lucien-X/playground/master/handy-scripts/hitokoto/screenshot/Win10%20CMD%20PowerShell%20WSL.PNG)
-![OSX.PNG](https://raw.githubusercontent.com/Lucien-X/playground/master/handy-scripts/hitokoto/screenshot/OSX.PNG)
+![Win10 CMD PowerShell WSL.jpg](https://raw.githubusercontent.com/Lucien-X/playground/master/handy-scripts/hitokoto/screenshot/Win10%20CMD%20PowerShell%20WSL.jpg)
+![OSX.jpg](https://raw.githubusercontent.com/Lucien-X/playground/master/handy-scripts/hitokoto/screenshot/OSX.jpg)
