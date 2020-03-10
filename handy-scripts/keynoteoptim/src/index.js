@@ -44,6 +44,8 @@ try {
 `);
     process.exit(0);
   }
+  // 终端拖拽输入文件名时，会将' '转义为'\ '，这里反转回来，避免不必要的错误
+  filePath = filePath.replace(/\\ /g, ' ');
   const filePathObj = path.parse(filePath);
   const { name: fileName, dir: fileDir, ext: fileExt } = filePathObj;
   if (fileExt !== '.key') {

@@ -1,8 +1,18 @@
 {
   "name": "keynoteoptim",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Optimize keynote image size",
   "registry": "https://registry.npmjs.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lucien-X/playground/tree/master/handy-scripts/keynoteoptim"
+  },
+  "keywords": [
+    "keynote",
+    "compress",
+    "optimize",
+    "size"
+  ],
   "main": "src/index.js",
   "bin": "src/index.js",
   "scripts": {
