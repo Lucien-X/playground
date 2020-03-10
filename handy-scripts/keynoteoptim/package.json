@@ -1,0 +1,19 @@
+{
+  "name": "keynoteoptim",
+  "version": "0.0.1",
+  "description": "Optimize keynote image size",
+  "registry": "https://registry.npmjs.org",
+  "main": "src/index.js",
+  "bin": "src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
+  "author": "lucien-x",
+  "license": "MIT",
+  "dependencies": {
+    "adm-zip": "^0.4.14",
+    "ora": "^4.0.3",
+    "readline-sync": "^1.4.10",
+    "sharp": "^0.25.1"
+  }
+}

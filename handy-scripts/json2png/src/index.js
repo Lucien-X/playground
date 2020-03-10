@@ -3,7 +3,6 @@
 // 内置包
 const fs = require('fs');
 const path = require('path');
-const readlineSync = require('readline-sync');
 
 // 二方包
 const logo = require('./lib/logo');
@@ -20,6 +19,7 @@ log.info(`${logo}
 `);
 
 // 三方包
+const readlineSync = require('readline-sync');
 const open = require('open');
 const renderLottie = require('./lib/puppeteer-lottie');
 
