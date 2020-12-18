@@ -1,5 +1,6 @@
 const got = require('got');
 const { HttpsProxyAgent } = require('hpagent');
+const { COOKIE, HTTP_PROXY } = require('./config');
 
 const defaultConfig = {
   agent: {
@@ -9,7 +10,7 @@ const defaultConfig = {
 			maxSockets: 256,
 			maxFreeSockets: 256,
 			scheduling: 'lifo',
-			proxy: 'http://localhost:58002'
+			proxy: HTTP_PROXY
 		})
   },
   headers: {
@@ -23,7 +24,8 @@ const defaultConfig = {
     'sec-fetch-user':' ?1',
     'sec-fetch-dest':' document',
     'referer':' https://www.pixiv.net/',
-    'accept-language':' zh-CN,zh;q=0.9,en;q=0.8',
+    'accept-language': ' zh-CN,zh;q=0.9,en;q=0.8',
+    'cookie': COOKIE,
   }
 };
 

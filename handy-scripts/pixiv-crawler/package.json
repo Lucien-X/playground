@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "start": "node ./crawl.js && node ./download.js"
+    "start": "npm run crawl && npm run download",
+    "crawl": "node ./crawl.js",
+    "download": "node ./download.js"
   },
   "dependencies": {
     "filenamify": "^4.2.0",

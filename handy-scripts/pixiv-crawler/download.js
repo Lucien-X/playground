@@ -4,7 +4,8 @@ const stream = require('stream');
 const { promisify } = require('util');
 const filenamify = require('filenamify');
 const httpclient = require('./httpclient');
-const taskQuene = require('./logs/taskQuene.json');
+const { USER_ID } = require('./config');
+const taskQuene = require(`./logs/taskQuene_${USER_ID}.json`);
 
 const pipeline = promisify(stream.pipeline);
 
@@ -24,7 +25,10 @@ const pipeline = promisify(stream.pipeline);
     const operator = async () => {
       if (taskQuene.length !== 0) {
         const task = taskQuene[0];
-        console.log(JSON.stringify(task, null, 4));
+        console.log(JSON.stringify({
+          filename: task.filename,
+          url: task.url,
+        }, null, 4));
         const filePath = path.join(DIR_PATH, task.filename);
         if (fs.existsSync(filePath)) {
           skiped++;
@@ -41,12 +45,12 @@ const pipeline = promisify(stream.pipeline);
     };
     await operator();
   } catch (error) {
-    const dumpDest = path.join(__dirname, '/logs/taskQueneDump.json');
+    const dumpDest = path.join(__dirname, `/logs/unfinishedQuene_${USER_ID}.json`);
     fs.writeFileSync(
       dumpDest,
       JSON.stringify(taskQuene, null, 4)
     );
-    console.error(`发生错误，剩余任务日志已输出至${dumpDest}\n`, error);
+    console.error(`发生错误，剩余任务日志已输出至${dumpDest}\n，执行npm run download以重试`, error);
     summary();
   }
   summary();

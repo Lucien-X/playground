@@ -2,8 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const filenamify = require('filenamify');
 const httpclient = require('./httpclient');
-
-const USER_ID = 2188232;
+const { USER_ID } = require('./config');
 
 const PAGE_SIZE = 18;
 
@@ -28,14 +27,18 @@ const getFileNameSuffix = (filename) => {
       indexUrl,
     );
     // console.log(resp1.body);
-    let illustsIdList = [];
+    let projectIdList = [];
     const illusts = JSON.parse(resp1.body).body.illusts;
+    const manga = JSON.parse(resp1.body).body.manga;
     if (typeof illusts === 'object') {
-      illustsIdList = Object.keys(illusts);
+      projectIdList = projectIdList.concat(Object.keys(illusts));
+    }
+    if (typeof manga === 'object') {
+      projectIdList = projectIdList.concat(Object.keys(manga));
     }
     const quene = [];
-    for (let idx = 0; idx < illustsIdList.length; idx = idx + PAGE_SIZE) {
-      quene.push(illustsIdList.slice(idx, idx + PAGE_SIZE));
+    for (let idx = 0; idx < projectIdList.length; idx = idx + PAGE_SIZE) {
+      quene.push(projectIdList.slice(idx, idx + PAGE_SIZE));
     }
     console.log('=========================================== Collecting Projects...... ===========================================');
     let worksStack = [];
@@ -87,7 +90,7 @@ const getFileNameSuffix = (filename) => {
     };
     await operator1();
     fs.writeFileSync(
-      path.join(__dirname, '/logs/taskQuene.json'),
+      path.join(__dirname, `/logs/taskQuene_${USER_ID}.json`),
       JSON.stringify(taskQuene, null, 4)
     );
     console.log('=========================================== Crawling Done...... ===========================================');
