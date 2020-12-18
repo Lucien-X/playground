@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "start": "node ./crawl.js && node ./download.js"
+  },
+  "dependencies": {
+    "filenamify": "^4.2.0",
+    "got": "^11.8.1",
+    "hpagent": "^0.1.1"
+  }
+}
