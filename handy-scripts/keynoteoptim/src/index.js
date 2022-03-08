@@ -15,7 +15,7 @@ const pkg = require('../package.json');
 // 三方包
 const readlineSync = require('readline-sync');
 const adm_zip = require('adm-zip');
-const sharp = require('sharp');
+const Jimp = require('jimp');
 const ora = require('ora');
 
 log.info(`${logo}
@@ -36,7 +36,7 @@ try {
 按下 Ctrl+C 组合键可强行终止程序。
 ==========================================
 `);
-  } else if (filePath === '-h' || filePath === '--help'){
+  } else if (filePath === '-h' || filePath === '--help') {
     console.log(`
 [使用方式]
 1. 输入 keynoteoptim 指令并回车，进入交互式命令行
@@ -63,7 +63,7 @@ try {
   const initialTime = new Date().getTime();
 
   log.info(`\n======================== Keynote压缩开始 ========================\n`);
-  const spinner = ora({spinner: 'dots8'}).start();
+  const spinner = ora({ spinner: 'dots8' }).start();
   spinner.info(`预处理中...`).start();
   // 拷贝副本
   copy(filePath, tempPath, () => {
@@ -80,20 +80,22 @@ try {
       const promises = assetList.map(async (val, idx, arr) => {
         const { name, dir, ext } = path.parse(`${assetPath}/${val}`);
         const imagePath = `${dir}/${name}${ext}`;
-        // https://sharp.pixelplumbing.com/api-constructor#sharp
         const isImage = [
           '.jpg',
           '.jpeg',
           '.png',
-          '.webp',
           '.gif',
-          '.svg',
           '.tiff',
-          // '.bmp',
+          '.bmp',
         ].indexOf(ext.toLowerCase()) !== -1;
         if (isImage) {
-          const buffer = await sharp(imagePath).toBuffer();
-          fs.writeFileSync(imagePath, buffer);
+          try {
+            // https://npmmirror.com/package/jimp
+            const image = await Jimp.read(imagePath);
+            return await image.quality(70).deflateLevel(9).writeAsync(imagePath);
+          } catch (error) {
+            console.error(error);
+          }
         }
       });
 
@@ -109,7 +111,7 @@ try {
         spinner.succeed(`图像批处理 ${counter}/${assetList.length}`).start();
         spinner.info(`后处理中...`).start();
         // 重压缩
-        var zip = new adm_zip();
+        const zip = new adm_zip();
         zip.addLocalFolder(extractPath);
         zip.writeZip(zipPath);
         rmrf(extractPath);
